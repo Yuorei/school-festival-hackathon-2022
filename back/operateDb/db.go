@@ -32,7 +32,7 @@ type Lend_list struct {
 	deadline    time.Time
 }
 
-func Init() {
+func Init() error {
 	POSTGRES_HOST := os.Getenv("POSTGRES_HOST")
 	POSTGRES_USER := os.Getenv("POSTGRES_USER")
 	POSTGRES_PASSWORD := os.Getenv("POSTGRES_PASSWORD")
@@ -50,8 +50,9 @@ func Init() {
 	db.AutoMigrate(&Rent_list{})
 	db.AutoMigrate(&Lend_list{})
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
+	return nil
 }
 
 func GetConnect() *gorm.DB {
