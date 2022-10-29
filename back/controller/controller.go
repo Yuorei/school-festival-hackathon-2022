@@ -24,6 +24,7 @@ type Rent_lists struct {
 	Deadline    time.Time `json:"deadline"`
 }
 
+// /users
 func GetUsers(c *gin.Context) {
 	var user User_register
 	var res User_res
@@ -45,6 +46,8 @@ func DeleteUsers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, "StatusOK")
 }
+
+// /rent-lists
 func GetAllRentLists(c *gin.Context) {
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
@@ -87,6 +90,8 @@ func PutRentLists(c *gin.Context) {//id
 func DeleteRentLists(c *gin.Context) {//id
 	c.JSON(http.StatusOK, "StatusOK")
 }
+
+// /lend-lists
 func GetLendLists(c *gin.Context) {
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
