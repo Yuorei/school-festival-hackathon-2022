@@ -1,4 +1,4 @@
-package controllers
+package controller
 
 import (
 	"net/http"
@@ -53,7 +53,8 @@ func GetAllRentLists(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
-func GetSingleRentList(c *gin.Context) { //todo funcName
+func GetSingleRentList(c *gin.Context) {//id
+	//id := c.Param("id")
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
@@ -75,7 +76,7 @@ func PostRentLists(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
-func PutRentLists(c *gin.Context) {
+func PutRentLists(c *gin.Context) {//id
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
@@ -83,10 +84,18 @@ func PutRentLists(c *gin.Context) {
 	}
 
 }
-func DeleteRentLists(c *gin.Context) {
+func DeleteRentLists(c *gin.Context) {//id
 	c.JSON(http.StatusOK, "StatusOK")
 }
 func GetLendLists(c *gin.Context) {
+	var res Rent_lists
+	if err := c.Bind(&res); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+func GetLendThing(c *gin.Context) {//id
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
@@ -108,7 +117,7 @@ func PostLendLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func PutLendLists(c *gin.Context) {
+func PutLendLists(c *gin.Context) {//id
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
@@ -116,6 +125,6 @@ func PutLendLists(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
-func DeleteLendList(c *gin.Context) {
+func DeleteLendList(c *gin.Context) {//id
 	c.JSON(http.StatusOK, "StatusOK")
 }
