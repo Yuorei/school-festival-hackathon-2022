@@ -7,7 +7,7 @@ services:
     volumes:
       - ./front:/app
     ports:
-      - "8000:8000"
+      - "8000"
     tty: true
     environment:
       NODE_ENV: development
@@ -18,9 +18,24 @@ services:
     volumes:
       - ./back:/app
     ports:
-      - "3030:3000"
+      - "3000"
     tty: true
     environment:
       NODE_ENV: development
+
+  db:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: gakusai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db
+      TZ: "Asia/Tokyo"
+      POSTGRES_HOST_AUTH_METHOD: trust
+
 
 
