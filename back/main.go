@@ -2,6 +2,7 @@ package main
 
 import (
 	"lendingAndBorrowing/controller"
+	"lendingAndBorrowing/operateDb"
 
 	"github.com/gin-gonic/gin"
 	//"lendingAndBorrowing/operateDb"
@@ -9,6 +10,9 @@ import (
 
 func main() {
 	router := gin.Default()
+	if err:=operateDb.Init();err!=nil{
+		panic("DBerror")
+	}
 
 	router.POST("/users/", controller.GetUsers)
 	router.DELETE("/users", controller.DeleteUsers)
