@@ -7,18 +7,17 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.POST("/users/", hoge)
-	router.DELETE("/users", hoge)
-	router.GET("/rent-lists", hoge)
-	router.GET("/rent-lists/:id", hoge)
-	router.POST("/rent-lists", head)
-	router.PUT("/rent-lists/:id", hoge)
-	router.DELETE("/rent-lists/:id", hoge)
-	router.GET("/lend-lists", hoge)
-	router.GET("/lend-lists/:id", hoge)
-	router.POST("/lend-lists", hoge)
-	router.PUT("/lend-lists/:id", hoge)
-	router.DELETE("/lend-lists/:id", hoge)
-
+	router.POST("/users/", GetUsers)
+	router.DELETE("/users", DeleteUsers)
+	router.GET("/rent-lists", GetAllRentLists) //実装あとで
+	router.GET("/rent-lists/:id", GetSingleRentList)
+	router.POST("/rent-lists", PostRentLists)
+	router.PUT("/rent-lists/:id", PutRentLists)
+	router.DELETE("/rent-lists/:id", DeleteRentLists)
+	router.GET("/lend-lists", GetLendLists) //実装あとで
+	router.GET("/lend-lists/:id", GetLendThing)
+	router.POST("/lend-lists", PostLendLists)
+	router.PUT("/lend-lists/:id", PutLendLists)
+	router.DELETE("/lend-lists/s:id", DeleteLendList)
 	router.Run(":3000")
 }
