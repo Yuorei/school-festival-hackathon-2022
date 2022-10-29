@@ -1,23 +1,26 @@
 package main
 
 import (
+	"lendingAndBorrowing/controller"
+
 	"github.com/gin-gonic/gin"
+	//"lendingAndBorrowing/operateDb"
 )
 
 func main() {
 	router := gin.Default()
 
-	router.POST("/users/", GetUsers)
-	router.DELETE("/users", DeleteUsers)
-	router.GET("/rent-lists", GetAllRentLists) //実装あとで
-	router.GET("/rent-lists/:id", GetSingleRentList)
-	router.POST("/rent-lists", PostRentLists)
-	router.PUT("/rent-lists/:id", PutRentLists)
-	router.DELETE("/rent-lists/:id", DeleteRentLists)
-	router.GET("/lend-lists", GetLendLists) //実装あとで
-	router.GET("/lend-lists/:id", GetLendThing)
-	router.POST("/lend-lists", PostLendLists)
-	router.PUT("/lend-lists/:id", PutLendLists)
-	router.DELETE("/lend-lists/s:id", DeleteLendList)
+	router.POST("/users/", controller.GetUsers)
+	router.DELETE("/users", controller.DeleteUsers)
+	router.GET("/rent-lists", controller.GetAllRentLists) //実装あとで
+	router.GET("/rent-lists/:id", controller.GetSingleRentList)
+	router.POST("/rent-lists", controller.PostRentLists)
+	router.PUT("/rent-lists/:id", controller.PutRentLists)
+	router.DELETE("/rent-lists/:id", controller.DeleteRentLists)
+	router.GET("/lend-lists", controller.GetLendLists) //実装あとで
+	router.GET("/lend-lists/:id", controller.GetLendThing)
+	router.POST("/lend-lists", controller.PostLendLists)
+	router.PUT("/lend-lists/:id", controller.PutLendLists)
+	router.DELETE("/lend-lists/s:id", controller.DeleteLendList)
 	router.Run(":3000")
 }
