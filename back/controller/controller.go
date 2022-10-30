@@ -1,10 +1,14 @@
 package controller
 
 import (
+	"encoding/base64"
+	"fmt"
 	"lendingAndBorrowing/operateDb"
+	"log"
 	"net/http"
-	"time"
 	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -55,6 +59,12 @@ func GetAllRentLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
+	src := res.Image_url
+	dec, err := base64.StdEncoding.DecodeString(src)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(dec))
 	db := operateDb.GetConnect()
 	// Get the first record ordered by primary key
 	if err := db.First(&res); err != nil {
@@ -105,7 +115,7 @@ func PutRentLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-	res.User_id=int_id
+	res.User_id = int_id
 	db := operateDb.GetConnect()
 	if err := db.Save(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
