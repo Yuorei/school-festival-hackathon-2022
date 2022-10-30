@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"encoding/base64"
+	"fmt"
 	"lendingAndBorrowing/operateDb"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -18,7 +21,6 @@ type User_res struct {
 }
 
 type Rent_lists struct {
-	Uuid        string    `json:"uuid"`
 	User_id     int       `json:"user_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
@@ -56,6 +58,12 @@ func GetAllRentLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
+	src := res.Image_url
+	dec, err := base64.StdEncoding.DecodeString(src)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(dec))
 	db := operateDb.GetConnect()
 	// Get the first record ordered by primary key
 	if err := db.First(&res); err != nil {

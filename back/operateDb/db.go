@@ -21,7 +21,7 @@ type Rent_list struct {
 	Name        string `gorm:"foreignKey:User_id"`
 	Description string `json:"weight"`
 	Image_url   string `json:"at"`
-	deadline    time.Time
+	Deadline    time.Time
 }
 type Lend_list struct {
 	gorm.Model
@@ -29,7 +29,7 @@ type Lend_list struct {
 	Name        string `json:"name"`
 	Description string `json:"weight"`
 	Image_url   string `json:"at"`
-	deadline    time.Time
+	Deadline    time.Time
 }
 
 func Init() error {

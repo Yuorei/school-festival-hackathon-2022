@@ -2,19 +2,26 @@ package main
 
 import (
 	"lendingAndBorrowing/controller"
+	"lendingAndBorrowing/firebaseOperation"
+	"lendingAndBorrowing/middleware"
 	"lendingAndBorrowing/operateDb"
 
 	"github.com/gin-gonic/gin"
 	//"lendingAndBorrowing/operateDb"
+	firebase "firebase.google.com/go/v4"
 )
 
+var firebase_app *firebase.App
+
 func main() {
-	// DBopen
+	firebase_app = firebaseOperation.Init()
+	// DB open
 	if err := operateDb.Init(); err != nil {
 		panic("DBerror")
 	}
 
 	router := gin.Default()
+	router.Use(middleware.Middleware)
 	// /users
 	router.POST("/users/", controller.GetUsers)
 	router.DELETE("/users", controller.DeleteUsers)
@@ -35,4 +42,8 @@ func main() {
 
 	// sever
 	router.Run(":3000")
+}
+
+func Firebase_app() *firebase.App {
+	return firebase_app
 }
