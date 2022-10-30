@@ -28,6 +28,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: db
       TZ: "Asia/Tokyo"
+      GOOGLE_APPLICATION_CREDENTIALS: "/app/back/firebase-secretkey.json"
 
   db:
     image: postgres:14

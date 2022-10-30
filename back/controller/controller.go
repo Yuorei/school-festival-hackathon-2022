@@ -21,7 +21,6 @@ type User_res struct {
 }
 
 type Rent_lists struct {
-	Uuid        string    `json:"uuid"`
 	User_id     int       `json:"user_id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
