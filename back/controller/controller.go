@@ -121,7 +121,7 @@ func PutRentLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-
+	c.JSON(http.StatusOK, res)
 }
 func DeleteRentLists(c *gin.Context) {
 	id := c.Param("id")
@@ -145,38 +145,73 @@ func GetLendLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
+	db := operateDb.GetConnect()
+	// Get the first record ordered by primary key
+	if err := db.First(&res); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
 	c.JSON(http.StatusOK, res)
 }
 func GetLendThing(c *gin.Context) { //id
-	var res Rent_lists
-	if err := c.Bind(&res); err != nil {
+	id := c.Param("id")
+	var lists Rent_lists
+	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-	c.JSON(http.StatusOK, res)
+
+	// Get the first record ordered by primary key
+	db := operateDb.GetConnect()
+	if err := db.Where("user_id = ?", id).First(&lists); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+
+	c.JSON(http.StatusOK, lists)
 }
 func PostLendLists(c *gin.Context) {
 	var lists Rent_lists
-	var res Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-	if err := c.Bind(&lists); err != nil {
+	db := operateDb.GetConnect()
+	if err := db.Create(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, lists)
 }
 
 func PutLendLists(c *gin.Context) { //id
+	id := c.Param("id")
+	//stringからintにキャスト
+	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	res.User_id = int_id
+	db := operateDb.GetConnect()
+	if err := db.Save(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 	c.JSON(http.StatusOK, res)
 }
 func DeleteLendList(c *gin.Context) { //id
+	id := c.Param("id")
+	var lists Rent_lists
+	if err := c.Bind(&lists); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	db := operateDb.GetConnect()
+	if err := db.Where("user_id = ?", id).Delete(&lists); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
 	c.JSON(http.StatusOK, "StatusOK")
 }
