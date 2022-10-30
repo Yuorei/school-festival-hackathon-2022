@@ -23,7 +23,11 @@ services:
       - db
     tty: true
     environment:
-      NODE_ENV: development
+      POSTGRES_DB: gakusai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db
+      TZ: "Asia/Tokyo"
 
   db:
     image: postgres:14
