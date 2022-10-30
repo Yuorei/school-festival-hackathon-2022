@@ -4,7 +4,7 @@ import (
 	"lendingAndBorrowing/operateDb"
 	"net/http"
 	"time"
-
+	"strconv"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,12 +14,6 @@ type User_register struct {
 
 type User_res struct {
 	IsNewUser bool `json:"isNewUser"`
-}
-type Put_rent_lists struct {
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Image_url   string    `json:"image_url"`
-	Deadline    time.Time `json:"deadline"`
 }
 
 type Rent_lists struct {
@@ -102,24 +96,17 @@ func PostRentLists(c *gin.Context) {
 	c.JSON(http.StatusOK, lists)
 }
 
-// 聞くidつかっていなくないか？
-func PutRentLists(c *gin.Context) { //id
-	var part_lists Put_rent_lists
+func PutRentLists(c *gin.Context) {
+	id := c.Param("id")
+	//stringからintにキャスト
+	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
-	if err := c.Bind(&part_lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
+	res.User_id=int_id
 	db := operateDb.GetConnect()
-	if err := db.First(&part_lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
-
 	if err := db.Save(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
