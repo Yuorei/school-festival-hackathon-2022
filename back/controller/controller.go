@@ -2,12 +2,14 @@ package controller
 
 import (
 	"encoding/base64"
-	"fmt"
+	"lendingAndBorrowing/firebaseOperation"
 	"lendingAndBorrowing/operateDb"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -63,7 +65,13 @@ func GetAllRentLists(c *gin.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(dec))
+	bucket := firebaseOperation.UseDefaultBacket()
+	filename := uuid.NewRandom().String()
+	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	res.Image_url = "https://school-festival-hackathon.appspot.com" + filename
 	db := operateDb.GetConnect()
 	// Get the first record ordered by primary key
 	if err := db.First(&res); err != nil {
@@ -176,6 +184,18 @@ func PostLendLists(c *gin.Context) {
 		return
 	}
 	db := operateDb.GetConnect()
+	src := lists.Image_url
+	dec, err := base64.StdEncoding.DecodeString(src)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bucket := firebaseOperation.UseDefaultBacket()
+	filename := uuid.NewRandom().String()
+	lists.Image_url = "https://school-festival-hackathon.appspot.com" + filename
+	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
 	if err := db.Create(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -183,7 +203,7 @@ func PostLendLists(c *gin.Context) {
 	c.JSON(http.StatusOK, lists)
 }
 
-func PutLendLists(c *gin.Context) { //id
+func PutLendLists(c *gin.Context) {
 	id := c.Param("id")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
@@ -200,7 +220,7 @@ func PutLendLists(c *gin.Context) { //id
 	}
 	c.JSON(http.StatusOK, res)
 }
-func DeleteLendList(c *gin.Context) { //id
+func DeleteLendList(c *gin.Context) {
 	id := c.Param("id")
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
