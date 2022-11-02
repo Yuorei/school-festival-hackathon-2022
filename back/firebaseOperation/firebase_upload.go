@@ -39,7 +39,7 @@ func UseDefaultBacket() *storage.BucketHandle {
 // See https://godoc.org/cloud.google.com/go/storage#BucketHandle
 // for more details.storage.go
 
-func UploadFile(bucket string, object string, imgBase64 string) error {
+func UploadFile(bucket *storage.BucketHandle, object string, imgBase64 string) error {
 	ctx := context.Background()
 
 	client, err := storage.NewClient(ctx)
@@ -54,7 +54,7 @@ func UploadFile(bucket string, object string, imgBase64 string) error {
 	}
 
 	decodedReader := bytes.NewReader(decodedImage)
-	wc := client.Bucket(bucket).Object(object).NewWriter(ctx)
+	wc := bucket.Object(object).NewWriter(ctx)
 
 	if _, err = io.Copy(wc, decodedReader); err != nil {
 		fmt.Errorf("io.Copy:%v", err)

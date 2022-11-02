@@ -66,7 +66,8 @@ func GetAllRentLists(c *gin.Context) {
 		log.Fatal(err)
 	}
 	bucket := firebaseOperation.UseDefaultBacket()
-	filename := uuid.NewRandom().String()
+	u ,_:= uuid.NewRandom()
+	filename := u.String()
 	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -190,7 +191,8 @@ func PostLendLists(c *gin.Context) {
 		log.Fatal(err)
 	}
 	bucket := firebaseOperation.UseDefaultBacket()
-	filename := uuid.NewRandom().String()
+	u,_ := uuid.NewRandom()
+	filename := u.String()
 	lists.Image_url = "https://school-festival-hackathon.appspot.com" + filename
 	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
