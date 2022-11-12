@@ -40,6 +40,9 @@ func main() {
 	router.PUT("/lend-lists/:id", controller.PutLendLists)
 	router.DELETE("/lend-lists/s:id", controller.DeleteLendList)
 
+	// /upload-image
+	router.POST("/upload-image", controller.PostUploadImage)
+
 	// sever
 	router.Run(":3000")
 }
