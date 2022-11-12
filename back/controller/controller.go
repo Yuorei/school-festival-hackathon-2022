@@ -1,10 +1,9 @@
 package controller
 
 import (
-	"encoding/base64"
+	"fmt"
 	"lendingAndBorrowing/firebaseOperation"
 	"lendingAndBorrowing/operateDb"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -28,6 +27,11 @@ type Rent_lists struct {
 	Description string    `json:"description"`
 	Image_url   string    `json:"image_url"`
 	Deadline    time.Time `json:"deadline"`
+}
+type Image_file struct {
+}
+type Upload_image_url struct {
+	Image_url string `json:"image_url"`
 }
 
 // /users
@@ -60,19 +64,6 @@ func GetAllRentLists(c *gin.Context) {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
-	src := res.Image_url
-	dec, err := base64.StdEncoding.DecodeString(src)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bucket := firebaseOperation.UseDefaultBacket()
-	u ,_:= uuid.NewRandom()
-	filename := u.String()
-	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
-	res.Image_url = "https://school-festival-hackathon.appspot.com" + filename
 	db := operateDb.GetConnect()
 	// Get the first record ordered by primary key
 	if err := db.First(&res); err != nil {
@@ -185,19 +176,6 @@ func PostLendLists(c *gin.Context) {
 		return
 	}
 	db := operateDb.GetConnect()
-	src := lists.Image_url
-	dec, err := base64.StdEncoding.DecodeString(src)
-	if err != nil {
-		log.Fatal(err)
-	}
-	bucket := firebaseOperation.UseDefaultBacket()
-	u,_ := uuid.NewRandom()
-	filename := u.String()
-	lists.Image_url = "https://school-festival-hackathon.appspot.com" + filename
-	if err := firebaseOperation.UploadFile(bucket, filename, string(dec)); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
 	if err := db.Create(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -235,4 +213,35 @@ func DeleteLendList(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, "StatusOK")
+}
+
+// /upload-image
+func PostUploadImage(c *gin.Context) {
+	var file Image_file
+	var image_url Upload_image_url
+	var url = "https://storage.googleapis.com/school-festival-hackathon.appspot.com/"
+	var image_extension = ".jpg"
+	if err := c.Bind(&file); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	if err := c.Bind(&image_url); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+	u, err := uuid.NewRandom()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	uu := u.String()
+	image_url.Image_url = url + uu + image_extension
+	image_file, _, err := c.Request.FormFile("file")
+	bucket := firebaseOperation.UseDefaultBacket()
+	if err := firebaseOperation.UploadFile(bucket, image_url.Image_url, image_file); err != nil {
+		c.String(http.StatusBadRequest, "bad request")
+		return
+	}
+
+	c.JSON(http.StatusOK, image_url)
 }

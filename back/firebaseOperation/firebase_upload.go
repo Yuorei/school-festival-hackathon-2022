@@ -1,17 +1,19 @@
 package firebaseOperation
 
 import (
-	"bytes"
 	"context"
-	"encoding/base64"
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"os"
 
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go/v4"
 )
+
+type Image_file struct {
+}
 
 func UseDefaultBacket() *storage.BucketHandle {
 	config := &firebase.Config{
@@ -39,7 +41,7 @@ func UseDefaultBacket() *storage.BucketHandle {
 // See https://godoc.org/cloud.google.com/go/storage#BucketHandle
 // for more details.storage.go
 
-func UploadFile(bucket *storage.BucketHandle, object string, imgBase64 string) error {
+func UploadFile(bucket *storage.BucketHandle, object string,  decodedImage multipart.File) error {
 	ctx := context.Background()
 
 	client, err := storage.NewClient(ctx)
@@ -48,15 +50,9 @@ func UploadFile(bucket *storage.BucketHandle, object string, imgBase64 string) e
 	}
 	defer client.Close()
 
-	decodedImage, err := base64.StdEncoding.DecodeString(imgBase64)
-	if err != nil {
-		return fmt.Errorf("DecodeString: %v", err)
-	}
-
-	decodedReader := bytes.NewReader(decodedImage)
 	wc := bucket.Object(object).NewWriter(ctx)
 
-	if _, err = io.Copy(wc, decodedReader); err != nil {
+	if _, err = io.Copy(wc, decodedImage); err != nil {
 		fmt.Errorf("io.Copy:%v", err)
 	}
 	if err := wc.Close(); err != nil {
