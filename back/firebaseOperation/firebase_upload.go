@@ -12,9 +12,6 @@ import (
 	firebase "firebase.google.com/go/v4"
 )
 
-type Image_file struct {
-}
-
 func UseDefaultBacket() *storage.BucketHandle {
 	config := &firebase.Config{
 		StorageBucket: os.Getenv("BUCKET_NAME") + ".appspot.com",
