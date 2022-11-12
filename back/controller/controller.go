@@ -236,18 +236,8 @@ func PostUploadImage(c *gin.Context) {
 	}
 	uu := u.String()
 	image_url.Image_url = url + uu + image_extension
-
-	//=======================ここからが
 	image_file, _, err := c.Request.FormFile("file")
-	//######################
-	// src := image_url.Image_url
-	// dec, err := base64.StdEncoding.DecodeString(src)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	bucket := firebaseOperation.UseDefaultBacket()
-
-	// UploadFileの第3引数はformdataの型を入れるように変える
 	if err := firebaseOperation.UploadFile(bucket, image_url.Image_url, image_file); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
