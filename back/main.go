@@ -6,9 +6,8 @@ import (
 	"lendingAndBorrowing/middleware"
 	"lendingAndBorrowing/operateDb"
 
-	"github.com/gin-gonic/gin"
-	//"lendingAndBorrowing/operateDb"
 	firebase "firebase.google.com/go/v4"
+	"github.com/gin-gonic/gin"
 )
 
 var firebase_app *firebase.App
