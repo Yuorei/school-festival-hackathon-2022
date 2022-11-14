@@ -2,7 +2,6 @@ package operateDb
 
 import (
 	"os"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,10 +17,10 @@ type User struct {
 type Rent_list struct {
 	gorm.Model
 	User_id     int    `json:"user_id"`
-	Name        string `gorm:"foreignKey:User_id"`
-	Description string `json:"weight"`
-	Image_url   string `json:"at"`
-	Deadline    time.Time
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Image_url   string `json:"Image_url"`
+	Deadline    string `json:"Deadline"`
 }
 type Lend_list struct {
 	gorm.Model
@@ -29,7 +28,7 @@ type Lend_list struct {
 	Name        string `json:"name"`
 	Description string `json:"weight"`
 	Image_url   string `json:"at"`
-	Deadline    time.Time
+	Deadline    string `json:"Deadline"`
 }
 
 func Init() error {
