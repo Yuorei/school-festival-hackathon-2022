@@ -28,8 +28,6 @@ type Rent_lists struct {
 	Image_url   string    `json:"image_url"`
 	Deadline    time.Time `json:"deadline"`
 }
-type Image_file struct {
-}
 type Upload_image_url struct {
 	Image_url string `json:"image_url"`
 }
@@ -217,14 +215,9 @@ func DeleteLendList(c *gin.Context) {
 
 // /upload-image
 func PostUploadImage(c *gin.Context) {
-	var file Image_file
 	var image_url Upload_image_url
 	var url = "https://storage.googleapis.com/school-festival-hackathon.appspot.com/"
 	var image_extension = ".jpg"
-	if err := c.Bind(&file); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
 	if err := c.Bind(&image_url); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
