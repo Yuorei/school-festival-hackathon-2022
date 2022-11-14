@@ -217,7 +217,7 @@ func DeleteLendList(c *gin.Context) {
 func PostUploadImage(c *gin.Context) {
 	var image_url Upload_image_url
 	var url = "https://storage.googleapis.com/school-festival-hackathon.appspot.com/"
-	var image_extension = ".jpg"
+	var image_extension = ".webp"
 	if err := c.Bind(&image_url); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -227,11 +227,13 @@ func PostUploadImage(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
-	uu := u.String()
-	image_url.Image_url = url + uu + image_extension
+	uuid_str := u.String()
+	image_url.Image_url = url + uuid_str + image_extension
+	
+	// formdataのkeyの"file"を受け取る
 	image_file, _, err := c.Request.FormFile("file")
 	bucket := firebaseOperation.UseDefaultBacket()
-	if err := firebaseOperation.UploadFile(bucket, image_url.Image_url, image_file); err != nil {
+	if err := firebaseOperation.UploadFile(bucket, uuid_str+image_extension, image_file); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}

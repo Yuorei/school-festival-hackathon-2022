@@ -54,7 +54,7 @@ func UploadFile(bucket *storage.BucketHandle, object string, decodedImage multip
 	// 下地
 	mw1 := imagick.NewMagickWand()
 	defer mw1.Destroy()
-	
+	// byteに変換
 	b,err:=io.ReadAll(decodedImage)
 	if err!=nil{
 		return err
@@ -64,10 +64,13 @@ func UploadFile(bucket *storage.BucketHandle, object string, decodedImage multip
 	if err != nil {
 		return err
 	}
+	// webpに変換
 	err = mw1.SetFormat("webp")
     if err != nil {
         return err
     }
+
+	// upload
 	if _, err =wc.Write(mw1.GetImageBlob()); err != nil {
 		fmt.Errorf("io.Copy:%v", err)
 		return err
@@ -76,8 +79,6 @@ func UploadFile(bucket *storage.BucketHandle, object string, decodedImage multip
 		fmt.Errorf("wc.Close:%v", err)
 		return err
 	}
-
-	fmt.Printf("Blob %v uploaded \n", object)
 
 	return nil
 }
