@@ -10,7 +10,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go/v4"
-	"github.com/gographics/imagick/imagick"
+	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
 func UseDefaultBacket() *storage.BucketHandle {
