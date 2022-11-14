@@ -2,4 +2,4 @@ FROM golang:latest
 
 WORKDIR /app
 
-RUN apt-get update -y&& apt-get install -y git curl vim
+RUN apt-get update -y&& apt-get install -y git curl vim libmagickwand-dev
