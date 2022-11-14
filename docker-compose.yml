@@ -7,10 +7,11 @@ services:
     volumes:
       - ./front:/app
     ports:
-      - "8000"
+      - "8080:8000"
     tty: true
     environment:
       NODE_ENV: development
+      BASE_URL: http://localhost:3030
 
   api:
     build:
@@ -18,7 +19,7 @@ services:
     volumes:
       - ./back:/app
     ports:
-      - "3000"
+      - "3030:3000"
     depends_on:
       - db
     tty: true
