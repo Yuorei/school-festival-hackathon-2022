@@ -28,8 +28,6 @@ type Rent_lists struct {
 	Image_url   string    `json:"image_url"`
 	Deadline    time.Time `json:"deadline"`
 }
-type Image_file struct {
-}
 type Upload_image_url struct {
 	Image_url string `json:"image_url"`
 }
@@ -217,14 +215,9 @@ func DeleteLendList(c *gin.Context) {
 
 // /upload-image
 func PostUploadImage(c *gin.Context) {
-	var file Image_file
 	var image_url Upload_image_url
 	var url = "https://storage.googleapis.com/school-festival-hackathon.appspot.com/"
-	var image_extension = ".jpg"
-	if err := c.Bind(&file); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
+	var image_extension = ".webp"
 	if err := c.Bind(&image_url); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -234,11 +227,13 @@ func PostUploadImage(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
-	uu := u.String()
-	image_url.Image_url = url + uu + image_extension
+	uuid_str := u.String()
+	image_url.Image_url = url + uuid_str + image_extension
+	
+	// formdataのkeyの"file"を受け取る
 	image_file, _, err := c.Request.FormFile("file")
 	bucket := firebaseOperation.UseDefaultBacket()
-	if err := firebaseOperation.UploadFile(bucket, image_url.Image_url, image_file); err != nil {
+	if err := firebaseOperation.UploadFile(bucket, uuid_str+image_extension, image_file); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
