@@ -5,9 +5,18 @@ import Box from '@mui/material/Box';
 import { spacing } from '@mui/system';
 
 import { Item } from '../components/item'
+import useSWR from 'swr'
+const fetcher = (url: string): Promise<any> => fetch(process.env.BASE_URL + url).then(res => res.json());
+
+
+function getLendList() {
+  const { data, error } = useSWR('/api/user/123', fetcher)
+
+  if (error) return <div>failed to load</div>
+  if (!data) return <div>loading...</div>
+}
 
 function Lend() {
-
   
 
   const items : Array<{id: number, user_id: number, name: string, comment:string, image_url:string, deadline:string}> = [
