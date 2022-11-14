@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import firebase from '../firebase';
 import 'firebase/compat/auth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -17,9 +17,17 @@ const uiConfig = {
     ],
 }
 
+import { AuthContext } from '../context/authContext'
 
 
 const SignInScreen = (props) => {
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(user => {
+            setIsLoggedIn(true);
+        });
+    }, []);
+
     return (
         <div>
             <p>Please sign-in:</p>

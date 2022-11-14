@@ -10,7 +10,7 @@ export type Props = {
   children: React.ReactNode;
 };
 
-export const Item : React.FC<Props> = ({ itemcontents} : object) => {
+export const Item : React.FC<Props> = ({ itemcontents } : object) => {
   return (
     <Card sx={{ m: 1}}>
       <CardActionArea>

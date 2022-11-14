@@ -94,12 +94,12 @@ func GetSingleRentList(c *gin.Context) {
 func PostRentLists(c *gin.Context) {
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+		c.String(http.StatusBadRequest, "bad request1")
 		return
 	}
 	db := operateDb.GetConnect()
 	if err := db.Create(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+		c.String(http.StatusBadRequest, "bad request2")
 		return
 	}
 	c.JSON(http.StatusOK, lists)
