@@ -29,7 +29,7 @@ services:
       POSTGRES_HOST: db
       TZ: "Asia/Tokyo"
       BUCKET_NAME: school-festival-hackathon
-      GOOGLE_APPLICATION_CREDENTIALS: "/app/back/firebase-secretkey.json"
+      GOOGLE_APPLICATION_CREDENTIALS: "./firebase-secretkey.json"
 
 
   db:
