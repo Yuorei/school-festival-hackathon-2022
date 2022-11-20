@@ -34,12 +34,7 @@ type Res_lists struct {
 
 // /users
 func GetUsers(c *gin.Context) {
-	//var user User_register
 	var res User_register
-	// if err := c.Bind(&user); err != nil {
-	// 	c.String(http.StatusBadRequest, "bad request")
-	// 	return
-	// }
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -47,7 +42,7 @@ func GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 func DeleteUsers(c *gin.Context) {
-	var user User_register
+	var user User_res
 	if err := c.Bind(&user); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -112,7 +107,7 @@ func PostRentLists(c *gin.Context) {
 	res_lists.Deadline = rent_lists.Deadline
 
 	db := operateDb.GetConnect()
-	
+
 	// .Errorをつけるとうまくいく
 	if err := db.Create(&rent_lists).Error; err != nil {
 		c.String(http.StatusBadRequest, err.Error())
