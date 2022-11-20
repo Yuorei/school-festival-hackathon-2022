@@ -16,7 +16,7 @@ type User struct {
 }
 type Rent_list struct {
 	gorm.Model
-	Uuid string `json:"uuid"`
+	Uuid        string `json:"uuid"`
 	User_id     int    `json:"user_id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -25,7 +25,7 @@ type Rent_list struct {
 }
 type Lend_list struct {
 	gorm.Model
-	Uuid string `json:"uuid"`
+	Uuid        string `json:"uuid"`
 	User_id     int    `gorm:"foreignKey:User_id"`
 	Name        string `json:"name"`
 	Description string `json:"weight"`
