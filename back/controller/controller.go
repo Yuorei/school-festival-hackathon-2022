@@ -34,12 +34,12 @@ type Res_lists struct {
 
 // /users
 func GetUsers(c *gin.Context) {
-	var user User_register
-	var res User_res
-	if err := c.Bind(&user); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
-		return
-	}
+	//var user User_register
+	var res User_register
+	// if err := c.Bind(&user); err != nil {
+	// 	c.String(http.StatusBadRequest, "bad request")
+	// 	return
+	// }
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
