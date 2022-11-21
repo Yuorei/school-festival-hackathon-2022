@@ -74,6 +74,7 @@ func GetAllRentLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+
 func GetSingleRentList(c *gin.Context) { //uuid
 	id := c.Param("uuid")
 	var res Res_lists
@@ -93,10 +94,10 @@ func GetSingleRentList(c *gin.Context) { //uuid
 }
 
 func PostRentLists(c *gin.Context) {
-	var lists Rent_lists
+	var lists operateDb.Rent_list
 	var Rent_list Res_lists
 	if err := c.Bind(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	u, err := uuid.NewRandom()
@@ -114,8 +115,8 @@ func PostRentLists(c *gin.Context) {
 	Rent_list.Deadline = lists.Deadline
 
 	db := operateDb.GetConnect()
-	if err := db.Create(&Rent_list); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	if err := db.Create(&lists).Error; err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, Rent_list)
@@ -127,13 +128,13 @@ func PutRentLists(c *gin.Context) {
 	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	res.User_id = int_id
 	db := operateDb.GetConnect()
-	if err := db.Save(&res); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	if err := db.Save(&res).Error; err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, res)
