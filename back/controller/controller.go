@@ -74,7 +74,8 @@ func GetAllRentLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func GetSingleRentList(c *gin.Context) {
+
+func GetSingleRentList(c *gin.Context) { //uuid
 	id := c.Param("uuid")
 	var res Res_lists
 	if err := c.Bind(&res); err != nil {
@@ -96,7 +97,7 @@ func PostRentLists(c *gin.Context) {
 	var lists operateDb.Rent_list
 	var Rent_list Res_lists
 	if err := c.Bind(&lists); err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	u, err := uuid.NewRandom()
@@ -168,39 +169,54 @@ func GetLendLists(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
-func GetLendThing(c *gin.Context) { //id
-	id := c.Param("id")
-	var lists Rent_lists
-	if err := c.Bind(&lists); err != nil {
+func GetLendThing(c *gin.Context) { //uuid
+	id := c.Param("uuid")
+	var res Rent_lists
+	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
 	// Get the first record ordered by primary key
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).First(&lists); err != nil {
+	if err := db.Where("uuid = ?", id).First(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
-	c.JSON(http.StatusOK, lists)
+	c.JSON(http.StatusOK, res)
 }
 func PostLendLists(c *gin.Context) {
-	var lists Rent_lists
+	var lists operateDb.Rent_list
+	var Rent_list Res_lists
 	if err := c.Bind(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+	u, err := uuid.NewRandom()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	uuid_str := u.String()
+
+	Rent_list.Uuid = uuid_str
+	Rent_list.User_id = lists.User_id
+	Rent_list.Name = lists.Name
+	Rent_list.Description = lists.Description
+	Rent_list.Image_url = lists.Image_url
+	Rent_list.Deadline = lists.Deadline
+
 	db := operateDb.GetConnect()
-	if err := db.Create(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	if err := db.Create(&lists).Error; err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, lists)
+	c.JSON(http.StatusOK, Rent_list)
 }
 
 func PutLendLists(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
@@ -217,14 +233,14 @@ func PutLendLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 func DeleteLendList(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).Delete(&lists); err != nil {
+	if err := db.Where("uuid = ?", id).Delete(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
