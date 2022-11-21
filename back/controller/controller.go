@@ -20,11 +20,19 @@ type User_res struct {
 	IsNewUser bool `json:"isNewUser"`
 }
 
+type Rent_lists struct {
+	User_id     int    `json:"user_id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Image_url   string `json:"image_url"`
+	Deadline    string `json:"deadline"`
+}
 type Upload_image_url struct {
 	Image_url string `json:"image_url"`
 }
+
 type Res_lists struct {
-	Uuid        string `json:"uuid"`
+	Uuid        string `json:"id"`
 	User_id     int    `json:"user_id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -68,26 +76,26 @@ func GetAllRentLists(c *gin.Context) {
 
 func GetSingleRentList(c *gin.Context) {
 	id := c.Param("id")
-	var lists Res_lists
-	if err := c.Bind(&lists); err != nil {
+	var res Res_lists
+	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
 	// Get the first record ordered by primary key
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).First(&lists); err != nil {
+	if err := db.Where("user_id = ?", id).First(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
-	c.JSON(http.StatusOK, lists)
+	c.JSON(http.StatusOK, res)
 }
 
 func PostRentLists(c *gin.Context) {
-	var rent_lists operateDb.Rent_list
-	var res_lists Res_lists
-	if err := c.Bind(&rent_lists); err != nil {
+	var lists Rent_lists
+	var Rent_list Res_lists
+	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request1")
 		return
 	}
@@ -97,30 +105,27 @@ func PostRentLists(c *gin.Context) {
 		return
 	}
 	uuid_str := u.String()
-	rent_lists.Uuid = uuid_str
 
-	res_lists.Uuid = uuid_str
-	res_lists.User_id = rent_lists.User_id
-	res_lists.Name = rent_lists.Name
-	res_lists.Description = rent_lists.Description
-	res_lists.Image_url = rent_lists.Image_url
-	res_lists.Deadline = rent_lists.Deadline
+	Rent_list.Uuid = uuid_str
+	Rent_list.User_id = lists.User_id
+	Rent_list.Name = lists.Name
+	Rent_list.Description = lists.Description
+	Rent_list.Image_url = lists.Image_url
+	Rent_list.Deadline = lists.Deadline
 
 	db := operateDb.GetConnect()
-
-	// .Errorをつけるとうまくいく
-	if err := db.Create(&rent_lists).Error; err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	if err := db.Create(&Rent_list); err != nil {
+		c.String(http.StatusBadRequest, "bad request2")
 		return
 	}
-	c.JSON(http.StatusOK, res_lists)
+	c.JSON(http.StatusOK, Rent_list)
 }
 
 func PutRentLists(c *gin.Context) {
 	id := c.Param("id")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
-	var res operateDb.Rent_list
+	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -134,14 +139,14 @@ func PutRentLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 func DeleteRentLists(c *gin.Context) {
-	id := c.Param("id")
-	var lists operateDb.Rent_list
+	id := c.Param("uuid")
+	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).Delete(&lists); err != nil {
+	if err := db.Where("uuid = ?", id).Delete(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
@@ -150,7 +155,7 @@ func DeleteRentLists(c *gin.Context) {
 
 // /lend-lists
 func GetLendLists(c *gin.Context) {
-	var res operateDb.Rent_list
+	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -165,7 +170,7 @@ func GetLendLists(c *gin.Context) {
 }
 func GetLendThing(c *gin.Context) { //id
 	id := c.Param("id")
-	var lists operateDb.Rent_list
+	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -181,7 +186,7 @@ func GetLendThing(c *gin.Context) { //id
 	c.JSON(http.StatusOK, lists)
 }
 func PostLendLists(c *gin.Context) {
-	var lists operateDb.Rent_list
+	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -198,7 +203,7 @@ func PutLendLists(c *gin.Context) {
 	id := c.Param("id")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
-	var res operateDb.Rent_list
+	var res Rent_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -213,7 +218,7 @@ func PutLendLists(c *gin.Context) {
 }
 func DeleteLendList(c *gin.Context) {
 	id := c.Param("id")
-	var lists operateDb.Rent_list
+	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
