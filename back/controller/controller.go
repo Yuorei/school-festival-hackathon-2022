@@ -60,7 +60,7 @@ func DeleteUsers(c *gin.Context) {
 
 // /rent-lists
 func GetAllRentLists(c *gin.Context) {
-	var res operateDb.Rent_list
+	var res Res_lists
 	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
@@ -76,20 +76,20 @@ func GetAllRentLists(c *gin.Context) {
 
 func GetSingleRentList(c *gin.Context) {
 	id := c.Param("id")
-	var lists operateDb.Rent_list
-	if err := c.Bind(&lists); err != nil {
+	var res Res_lists
+	if err := c.Bind(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
 	// Get the first record ordered by primary key
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).First(&lists); err != nil {
+	if err := db.Where("user_id = ?", id).First(&res); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 
-	c.JSON(http.StatusOK, lists)
+	c.JSON(http.StatusOK, res)
 }
 
 func PostRentLists(c *gin.Context) {
