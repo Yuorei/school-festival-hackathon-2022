@@ -187,10 +187,10 @@ func GetLendThing(c *gin.Context) { //uuid
 	c.JSON(http.StatusOK, res)
 }
 func PostLendLists(c *gin.Context) {
-	var lists Rent_lists
+	var lists operateDb.Rent_list
 	var Rent_list Res_lists
 	if err := c.Bind(&lists); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	u, err := uuid.NewRandom()
@@ -208,8 +208,8 @@ func PostLendLists(c *gin.Context) {
 	Rent_list.Deadline = lists.Deadline
 
 	db := operateDb.GetConnect()
-	if err := db.Create(&Rent_list); err != nil {
-		c.String(http.StatusBadRequest, "bad request")
+	if err := db.Create(&lists).Error; err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, Rent_list)
