@@ -139,14 +139,14 @@ func PutRentLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 func DeleteRentLists(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).Delete(&lists); err != nil {
+	if err := db.Where("uuid = ?", id).Delete(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
