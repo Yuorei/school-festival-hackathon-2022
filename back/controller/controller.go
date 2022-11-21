@@ -122,7 +122,7 @@ func PostRentLists(c *gin.Context) {
 }
 
 func PutRentLists(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
@@ -200,7 +200,7 @@ func PostLendLists(c *gin.Context) {
 }
 
 func PutLendLists(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	//stringからintにキャスト
 	int_id, _ := strconv.Atoi(id)
 	var res Rent_lists
@@ -217,14 +217,14 @@ func PutLendLists(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 func DeleteLendList(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("uuid")
 	var lists Rent_lists
 	if err := c.Bind(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
 	db := operateDb.GetConnect()
-	if err := db.Where("user_id = ?", id).Delete(&lists); err != nil {
+	if err := db.Where("uuid = ?", id).Delete(&lists); err != nil {
 		c.String(http.StatusBadRequest, "bad request")
 		return
 	}
